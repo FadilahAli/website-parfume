@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Aulia Luxe - Parfum & Bibit Parfum Premium</title>
+    <link rel="icon" href="logo.png" type="image/png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+    <style>
+        /* Slide-in animation for sidebar */
+        @keyframes slideIn {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(0); }
+        }
+        
+        @keyframes slideOut {
+            from { transform: translateX(0); }
+            to { transform: translateX(-100%); }
+        }
+        
+        /* Modern header gradient animation */
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .animated-gradient {
+            background: linear-gradient(-45deg, #6366F1, #8B5CF6, #D946EF, #EC4899);
+            background-size: 400% 400%;
+            animation: gradientFlow 15s ease infinite;
+        }
+        
+        /* Sidebar styling */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 300px;
+            height: 100vh;
+            background-color: rgba(17, 24, 39, 0.98);
+            z-index: 50;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+        }
+        
+        .sidebar.open {
+            left: 0;
+            animation: slideIn 0.3s forwards;
+        }
+        
+        .sidebar.closing {
+            animation: slideOut 0.3s forwards;
+        }
+        
+        /* Overlay when sidebar is open */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+            z-index: 40;
+        }
+        
+        .overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        /* Water animation styles */
+        @keyframes wave {
+            0% {
+                transform: translateX(0);
+            }
+            50% {
+                transform: translateX(-10%);
+            }
+            100% {
+                transform: translateX(0);
+            }
+        }
+
+        /* Floating button styles */
+        .floating-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #25D366;
+            color: white;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s;
+            z-index: 30;
+        }
+        
+        .floating-button:hover {
+            transform: scale(1.1);
+            background-color: #128C7E;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+        
+        /* Navbar item hover effect */
+        .nav-item {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-item::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: #D946EF;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-item:hover::after {
+            width: 100%;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Modern Header with Animated Gradient -->
+    <header class="sticky top-0 z-30 shadow-lg animated-gradient">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center">
+                    <button id="menuToggle" class="mr-4 lg:hidden text-white focus:outline-none transition-all hover:text-purple-300">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                    <div class="flex flex-col">
+                        <h1 class="text-2xl md:text-3xl font-extrabold uppercase text-white">
+                            Aulia Luxe</h1>
+                        </h1>
+                        <p class="text-xs md:text-sm text-purple-100">Parfum & Bibit Parfum Premium</p>
+                    </div>
+                </div>
+                
+                <!-- Desktop Navigation -->
+                <nav class="hidden lg:flex space-x-6">
+                    <a href="#" class="nav-item text-white hover:text-purple-200 py-2 transition-colors">Beranda</a>
+                    <a href="#parfum" class="nav-item text-white hover:text-purple-200 py-2 transition-colors">Parfum</a>
+                    <a href="#bibit" class="nav-item text-white hover:text-purple-200 py-2 transition-colors">Bibit Parfum</a>
+                    <a href="#testimonial" class="nav-item text-white hover:text-purple-200 py-2 transition-colors">Testimoni</a>
+                    <a href="#contact" class="nav-item text-white hover:text-purple-200 py-2 transition-colors">Hubungi Kami</a>
+                </nav>
+                
+                <!-- Contact Button -->
+                <div class="hidden md:block">
+                    <a href="#contact" class="inline-flex items-center bg-white text-purple-800 px-4 py-2 rounded-full font-medium hover:bg-purple-50 transition transform hover:-translate-y-1 shadow-md">
+                        <i class="fas fa-phone-alt mr-2"></i>
+                        Hubungi Kami
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Improved Sidebar Navigation -->
+    <div id="overlay" class="overlay"></div>
+    <div id="sidebar" class="sidebar">
+        <div class="p-6">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-xl font-bold text-white">Menu</h2>
+                <button id="closeMenu" class="text-gray-400 hover:text-white focus:outline-none">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <div class="flex flex-col space-y-4">
+                <a href="#" class="group flex items-center py-3 px-4 text-gray-300 hover:text-white hover:bg-purple-800/30 rounded-lg transition-all">
+                    <i class="fas fa-home w-6 text-center mr-3"></i>
+                    <span>Beranda</span>
+                </a>
+                <a href="#parfum" class="group flex items-center py-3 px-4 text-gray-300 hover:text-white hover:bg-purple-800/30 rounded-lg transition-all">
+                    <i class="fas fa-spray-can w-6 text-center mr-3"></i>
+                    <span>Parfum</span>
+                </a>
+                <a href="#bibit" class="group flex items-center py-3 px-4 text-gray-300 hover:text-white hover:bg-purple-800/30 rounded-lg transition-all">
+                    <i class="fas fa-flask w-6 text-center mr-3"></i>
+                    <span>Bibit Parfum</span>
+                </a>
+                <a href="#testimonial" class="group flex items-center py-3 px-4 text-gray-300 hover:text-white hover:bg-purple-800/30 rounded-lg transition-all">
+                    <i class="fas fa-comment w-6 text-center mr-3"></i>
+                    <span>Testimoni</span>
+                </a>
+                <a href="#contact" class="group flex items-center py-3 px-4 text-gray-300 hover:text-white hover:bg-purple-800/30 rounded-lg transition-all">
+                    <i class="fas fa-envelope w-6 text-center mr-3"></i>
+                    <span>Hubungi Kami</span>
+                </a>
+            </div>
+            
+            <div class="mt-12 pt-8 border-t border-gray-700">
+                <a href="https://wa.me/6281280799028" class="flex items-center justify-center bg-green-600 hover:bg-green-700 text-white py-3 px-6 rounded-lg font-medium transition transform hover:scale-105">
+                    <i class="fab fa-whatsapp mr-2 text-lg"></i>
+                    Pesan Sekarang
+                </a>
+            </div>
+            
+            <div class="mt-8 flex justify-center space-x-4">
+                <a href="#" class="text-gray-400 hover:text-white transition">
+                    <i class="fab fa-instagram text-xl"></i>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-white transition">
+                    <i class="fab fa-facebook-f text-xl"></i>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-white transition">
+                    <i class="fab fa-twitter text-xl"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <section class="hero relative h-96 flex items-center justify-center text-center text-white bg-cover bg-center" style="background-image: url('baneraulia.png');">
+        <div class="absolute inset-0 bg-black opacity-50"></div>
+        <div class="hero-content relative z-10 max-w-2xl">
+            <h1 class="text-5xl font-bold mb-4">Parfum & Bibit Parfum Berkualitas Premium</h1>
+            <p class="text-lg mb-6">Koleksi parfum dan bibit parfum berkualitas tinggi dengan aroma tahan lama dan ekslusif. Temukan favorit Anda dan pesan langsung via WhatsApp!</p>
+            <a class="btn whatsapp-btn inline-flex items-center bg-green-500 text-white py-3 px-8 rounded-full font-semibold hover:bg-green-700 transition transform hover:-translate-y-1 shadow-lg" href="#contact">
+                <i class="fab fa-whatsapp mr-2"></i>
+                Pesan via WhatsApp
+            </a>
+        </div>
+    </section>
+    <section class="categories py-16 bg-purple-100 text-center">
+        <h2 class="text-4xl font-bold mb-4">Koleksi Premium Kami</h2>
+        <p class="max-w-2xl mx-auto text-lg mb-12">Kami menyediakan dua kategori produk berkualitas untuk memenuhi kebutuhan Anda</p>
+        <div class="category-container grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="category bg-white rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-2 transition">
+                <img alt="Parfum Premium" class="w-full h-52 object-cover" src="https://storage.googleapis.com/a1aa/image/z0wApXGaI0r6jjb-7KyVoVOvzqlKShpUrIy4dtLCIWA.jpg"/>
+                <div class="category-info p-6">
+                    <h3 class="text-2xl font-semibold mb-4">Parfum Premium</h3>
+                    <p class="text-gray-700 mb-6">Ukuran Botol: 10ml, 30ml, 50ml, 100ml</p>
+                    <a class="btn bg-purple-500 text-white py-2 px-6 rounded-full font-semibold hover:bg-purple-700 transition" href="#parfum">Lihat Koleksi</a>
+                </div>
+            </div>
+            <div class="category bg-white rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-2 transition">
+                <img alt="Bibit Parfum" class="w-full h-52 object-cover" src="https://storage.googleapis.com/a1aa/image/vGaBWsS4tT6FKvITpd1N_tHBBMRKJiADcaUEdv0cfEQ.jpg"/>
+                <div class="category-info p-6">
+                    <h3 class="text-2xl font-semibold mb-4">Bibit Parfum</h3>
+                    <p class="text-gray-700 mb-6">Ukuran Botol: 10ml, 30ml, 50ml, 100ml</p>
+                    <a class="btn bg-purple-500 text-white py-2 px-6 rounded-full font-semibold hover:bg-purple-700 transition" href="#bibit">Lihat Koleksi</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="featured-products py-16 text-center" id="parfum">
+        <h2 class="text-4xl font-bold mb-12 relative inline-block">Parfum Premium</h2>
+        <div class="products grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 px-4">
+            <div class="product bg-white rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-2 transition">
+                <img alt="Parfum Midnight Rose" class="w-full h-64 object-cover" src="https://storage.googleapis.com/a1aa/image/V0MeBt5pygwkVRmapRABRhjEbmcxNnVUUIJknqibqKA.jpg"/>
+                <div class="product-info p-6">
+                    <h3 class="text-2xl font-semibold mb-2">Wangi Bunga</h3>
+                    <p class="text-gray-700 mb-4">Ukuran Botol: 10ml, 30ml, 50ml, 100ml</p>
+                    <div class="price text-xl font-bold text-purple-700 mb-4">Rp 50.000</div>
+                    <a class="btn whatsapp-btn inline-flex items-center bg-green-500 text-white py-2 px-6 rounded-full font-semibold hover:bg-green-700 transition transform hover:-translate-y-1 shadow-lg" href="#contact">
+                        <i class="fab fa-whatsapp mr-2"></i>
+                        Pesan via WhatsApp
+                    </a>
+                </div>
+            </div>
+            <div class="product bg-white rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-2 transition">
+                <img alt="Parfum Ocean Breeze" class="w-full h-64 object-cover" src="https://storage.googleapis.com/a1aa/image/ueQqdA7JQ8yUoEKs95Mj7BSBIOGSdt4VRWqfxWU5BMo.jpg"/>
+                <div class="product-info p-6">
+                    <h3 class="text-2xl font-semibold mb-2">Wangi Ocean</h3>
+                    <p class="text-gray-700 mb-4">Ukuran Botol: 10ml, 30ml, 50ml, 100ml</p>
+                    <div class="price text-xl font-bold text-purple-700 mb-4">Rp 50.000</div>
+                    <a class="btn whatsapp-btn inline-flex items-center bg-green-500 text-white py-2 px-6 rounded-full font-semibold hover:bg-green-700 transition transform hover:-translate-y-1 shadow-lg" href="#contact">
+                        <i class="fab fa-whatsapp mr-2"></i>
+                        Pesan via WhatsApp
+                    </a>
+                </div>
+            </div>
+            <div class="product bg-white rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-2 transition">
+                <img alt="Parfum Exotic Oud" class="w-full h-64 object-cover" src="https://storage.googleapis.com/a1aa/image/SjvQEuQF-uz1RtXs7VwgaAIwHcVjBRrn4cWIqcvOQ6s.jpg"/>
+                <div class="product-info p-6">
+                    <h3 class="text-2xl font-semibold mb-2">Exotic Oud</h3>
+                    <p class="text-gray-700 mb-4">Ukuran Botol: 10ml, 30ml, 50ml, 100ml</p>
+                    <div class="price text-xl font-bold text-purple-700 mb-4">Rp 50.000</div>
+                    <a class="btn whatsapp-btn inline-flex items-center bg-green-500 text-white py-2 px-6 rounded-full font-semibold hover:bg-green-700 transition transform hover:-translate-y-1 shadow-lg" href="#contact">
+                        <i class="fab fa-whatsapp mr-2"></i>
+                        Pesan via WhatsApp
+                    </a>
+                </div>
+            </div>
+            <div class="product bg-white rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-2 transition">
+                <img alt="Parfum Sweet Vanilla" class="w-full h-64 object-cover" src="https://storage.googleapis.com/a1aa/image/sADkRJ5s_yGr3CVkEr3MHjbKf8kZG-J4K5HeT6HXiyg.jpg"/>
+                <div class="product-info p-6">
+                    <h3 class="text-2xl font-semibold mb-2">Wangi Manis</h3>
+                    <p class="text-gray-700 mb-4">Ukuran Botol: 10ml, 30ml, 50ml, 100ml</p>
+                    <div class="price text-xl font-bold text-purple-700 mb-4">Rp 50.000</div>
+                    <a class="btn whatsapp-btn inline-flex items-center bg-green-500 text-white py-2 px-6 rounded-full font-semibold hover:bg-green-700 transition transform hover:-translate-y-1 shadow-lg" href="#contact">
+                        <i class="fab fa-whatsapp mr-2"></i>
+                        Pesan via WhatsApp
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="bibit-products bg-purple-100 py-16" id="bibit">
+        <div class="featured-products text-center">
+            <h2 class="text-4xl font-bold mb-12 relative inline-block">Bibit Parfum Premium</h2>
+            <div class="products grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 px-4">
+                <div class="product bg-white rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-2 transition">
+                    <img alt="Bibit Midnight Rose" class="w-full h-64 object-cover" src="https://storage.googleapis.com/a1aa/image/vrqYna9CCWb-9lsntHMipR7_FmqaNso4m0UJtMZXrAk.jpg"/>
+                    <div class="product-info p-6">
+                        <h3 class="text-2xl font-semibold mb-2">Bibit Wangi Bunga</h3>
+                        <p class="text-gray-700 mb-4">Ukuran Botol: 10ml, 30ml, 50ml, 100ml</p>
+                        <div class="price text-xl font-bold text-purple-700 mb-4">Rp 55.000 / 30ml</div>
+                        <a class="btn whatsapp-btn inline-flex items-center bg-green-500 text-white py-2 px-6 rounded-full font-semibold hover:bg-green-700 transition transform hover:-translate-y-1 shadow-lg" href="#contact">
+                            <i class="fab fa-whatsapp mr-2"></i>
+                            Pesan via WhatsApp
+                        </a>
+                    </div>
+                </div>
+                <div class="product bg-white rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-2 transition">
+                    <img alt="Bibit Ocean Breeze" class="w-full h-64 object-cover" src="https://storage.googleapis.com/a1aa/image/HjgGm7eJE8lHFCaaqLC4Ww4XuC_O48Dx43B8s6ds0Po.jpg"/>
+                    <div class="product-info p-6">
+                        <h3 class="text-2xl font-semibold mb-2">Bibit Ocean</h3>
+                        <p class="text-gray-700 mb-4">Ukuran Botol: 10ml, 30ml, 50ml, 100ml</p>
+                        <div class="price text-xl font-bold text-purple-700 mb-4">Rp 55.000 / 30ml</div>
+                        <a class="btn whatsapp-btn inline-flex items-center bg-green-500 text-white py-2 px-6 rounded-full font-semibold hover:bg-green-700 transition transform hover:-translate-y-1 shadow-lg" href="#contact">
+                            <i class="fab fa-whatsapp mr-2"></i>
+                            Pesan via WhatsApp
+                        </a>
+                    </div>
+                </div>
+                <div class="product bg-white rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-2 transition">
+                    <img alt="Bibit Exotic Oud" class="w-full h-64 object-cover" src="https://storage.googleapis.com/a1aa/image/JlaVyi0oj62UJ4Bz3c_c39nrLCg1iu-_GJWdv68KsIo.jpg"/>
+                    <div class="product-info p-6">
+                        <h3 class="text-2xl font-semibold mb-2">Bibit Exotic Oud</h3>
+                        <p class="text-gray-700 mb-4">Ukuran Botol: 10ml, 30ml, 50ml, 100ml</p>
+                        <div class="price text-xl font-bold text-purple-700 mb-4">Rp 55.000 / 30ml</div>
+                        <a class="btn whatsapp-btn inline-flex items-center bg-green-500 text-white py-2 px-6 rounded-full font-semibold hover:bg-green-700 transition transform hover:-translate-y-1 shadow-lg" href="#contact">
+                            <i class="fab fa-whatsapp mr-2"></i>
+                            Pesan via WhatsApp
+                        </a>
+                    </div>
+                </div>
+                <div class="product bg-white rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-2 transition">
+                    <img alt="Bibit Sweet Vanilla" class="w-full h-64 object-cover" src="https://storage.googleapis.com/a1aa/image/sx7RnL6PT4wPbNFIviRH9Pi2F1Q86q9X3P-Mg5m2hbQ.jpg"/>
+                    <div class="product-info p-6">
+                        <h3 class="text-2xl font-semibold mb-2">Bibit Wangi Manis</h3>
+                        <p class="text-gray-700 mb-4">Ukuran Botol: 10ml, 30ml, 50ml, 100ml</p>
+                        <div class="price text-xl font-bold text-purple-700 mb-4">Rp 55.000 / 30ml</div>
+                        <a class="btn whatsapp-btn inline-flex items-center bg-green-500 text-white py-2 px-6 rounded-full font-semibold hover:bg-green-700 transition transform hover:-translate-y-1 shadow-lg" href="#contact">
+                            <i class="fab fa-whatsapp mr-2"></i>
+                            Pesan via WhatsApp
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="benefits py-16 text-center">
+        <h2 class="text-4xl font-bold mb-12 relative inline-block">Kenapa Memilih Kami</h2>
+        <div class="benefits-container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 px-4">
+            <div class="benefit bg-white rounded-lg shadow-lg p-8">
+                <i class="fas fa-star text-4xl text-purple-700 mb-4"></i>
+                <h3 class="text-2xl font-semibold mb-4">Kualitas Premium</h3>
+                <p class="text-gray-700">Semua parfum dan bibit parfum kami dibuat dengan bahan berkualitas tinggi, diimpor dari produsen terpercaya.</p>
+            </div>
+            <div class="benefit bg-white rounded-lg shadow-lg p-8">
+                <i class="fas fa-shipping-fast text-4xl text-purple-700 mb-4"></i>
+                <h3 class="text-2xl font-semibold mb-4">Pengiriman Cepat</h3>
+                <p class="text-gray-700">Pengiriman ke seluruh Indonesia dengan jasa kurir terpercaya dan dapat dilacak.</p>
+            </div>
+            <div class="benefit bg-white rounded-lg shadow-lg p-8">
+                <i class="fas fa-headset text-4xl text-purple-700 mb-4"></i>
+                <h3 class="text-2xl font-semibold mb-4">Layanan Pelanggan 24/7</h3>
+                <p class="text-gray-700">Tim kami siap membantu Anda kapan saja dengan pertanyaan atau permintaan Anda.</p>
+            </div>
+            <div class="benefit bg-white rounded-lg shadow-lg p-8">
+                <i class="fas fa-thumbs-up text-4xl text-purple-700 mb-4"></i>
+                <h3 class="text-2xl font-semibold mb-4">Ulasan Positif</h3>
+                <p class="text-gray-700">Banyak pelanggan kami yang puas dengan produk dan layanan kami, buktikan sendiri!</p>
+            </div>
+        </div>
+    </section>
+    <section class="testimonial py-16 bg-purple-100 text-center" id="testimonial">
+        <h2 class="text-4xl font-bold mb-12">Testimoni Pelanggan</h2>
+        <div class="testimonial-container max-w-2xl mx-auto">
+            <blockquote class="bg-white p-6 rounded-lg shadow-lg mb-6">
+                <p class="text-lg italic text-gray-700">"Saya sangat puas dengan parfum yang saya beli! Aromanya tahan lama dan sangat elegan."</p>
+                <footer class="mt-4">
+                    <cite class="text-purple-700 font-semibold">- Rina, Jakarta</cite>
+                </footer>
+            </blockquote>
+            <blockquote class="bg-white p-6 rounded-lg shadow-lg mb-6">
+                <p class="text-lg italic text-gray-700">"Bibit parfum yang saya beli sangat berkualitas. Saya bisa membuat parfum sendiri dengan aroma yang saya suka!"</p>
+                <footer class="mt-4">
+                    <cite class="text-purple-700 font-semibold">- Budi, Surabaya</cite>
+                </footer>
+            </blockquote>
+        </div>
+    </section>
+    <section class="contact py-16" id="contact">
+        <h2 class="text-4xl font-bold mb-12 text-center">Hubungi Kami</h2>
+        <div class="contact-info text-center">
+            <p class="text-lg mb-4">Untuk pertanyaan atau pemesanan, silakan hubungi kami melalui WhatsApp atau email.</p>
+            <a class="btn whatsapp-btn inline-flex items-center bg-green-500 text-white py-3 px-8 rounded-full font-semibold hover:bg-green-700 transition transform hover:-translate-y-1 shadow-lg" href="https://wa.me/6281280799028">
+                <i class="fab fa-whatsapp mr-2"></i>
+                Hubungi via WhatsApp
+            </a>
+            <p class="mt-4 text-gray-700">Email: <a href="mailto:fadilahinayatali12@gmail.com" class="text-purple-700">fadilahinayatali12@gmail.com</a></p>
+        </div>
+    </section>
+    
+    <!-- Floating WhatsApp Button -->
+    <a href="https://wa.me/6281280799028" class="floating-button" aria-label="Hubungi kami via WhatsApp">
+        <i class="fab fa-whatsapp text-2xl"></i>
+    </a>
+
+    <footer class="bg-gray-800 text-white py-6 text-center">
+        <p>&copy; 2025 Aulia Luxe. All rights reserved.</p>
+        <div class="mt-4">
+            <a href="https://www.instagram.com/onesm.art?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" class="text-white hover:text-purple-300 mx-2" target="_blank" rel="noopener noreferrer">
+                <i class="fab fa-instagram"></i> Instagram
+            </a>
+        </div>
+    </footer>
+     <script>
+        // Improved Sidebar Functionality
+        const menuToggle = document.getElementById('menuToggle');
+        const closeMenu = document.getElementById('closeMenu');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const sidebarLinks = sidebar.querySelectorAll('a');
+        
+        // Open sidebar
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.add('open');
+            overlay.classList.add('show');
+            document.body.style.overflow = 'hidden'; // Prevent scrolling when sidebar is open
+        });
+        
+        // Close sidebar
+        function closeSidebar() {
+            sidebar.classList.add('closing');
+            overlay.classList.remove('show');
+            document.body.style.overflow = '';
+            
+            setTimeout(() => {
+                sidebar.classList.remove('open');
+                sidebar.classList.remove('closing');
+            }, 300);
+        }
+        
+        closeMenu.addEventListener('click', closeSidebar);
+        overlay.addEventListener('click', closeSidebar);
+        
+        // Close sidebar when clicking on links
+        sidebarLinks.forEach(link => {
+            link.addEventListener('click', closeSidebar);
+        });
+        
+        // Close sidebar on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && sidebar.classList.contains('open')) {
+                closeSidebar();
+            }
+        });
+    </script>
+</body>
+</html>
